@@ -22,9 +22,11 @@ USER 1000
 
 WORKDIR ${WORKDIR}
 
+ENV SERVER_START_COMMAND="java -XX:MaxRAMPercentage=100 -XX:+UseContainerSupport -jar ${SERVER_PATH} nogui"
+
 # download jars on build time instead of on run time. EULA must not be accepted for this command
-RUN java -XX:MaxRAMPercentage=100 -XX:+UseContainerSupport -jar ${SERVER_PATH} nogui | grep 'You need to agree to the EULA' || exit 1
+RUN ${SERVER_START_COMMAND} | grep 'You need to agree to the EULA' || exit 1
 
 EXPOSE 25565
 
-CMD if [[ "${EULA}" == true ]]; then echo 'eula=true' > eula.txt && java -XX:MaxRAMPercentage=100 -XX:+UseContainerSupport -jar ${SERVER_PATH} nogui ; else echo 'Please set the EULA environment variable to true to accept the minecraft EULA by adding "-e EULA=true" right after "docker run"' ; fi
+CMD if [[ "${EULA}" == true ]]; then echo 'eula=true' > eula.txt && ${SERVER_START_COMMAND} ; else echo 'Please set the EULA environment variable to true to accept the minecraft EULA by adding "-e EULA=true" right after "docker run"' ; fi
