@@ -5,7 +5,8 @@ ARG JAVA_VERSION=21
 ARG FABRIC_VERSION=0.15.10
 ARG FABRIC_INSTALLER_VERSION=1.0.1
 
-RUN apk add openjdk${JAVA_VERSION}
+RUN apk add openjdk${JAVA_VERSION} \
+    udev
 
 ENV SERVER_PATH=/usr/bin/minecraft-server.jar
 
